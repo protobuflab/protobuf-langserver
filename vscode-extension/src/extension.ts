@@ -26,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	languageServerClient.onStart(async () => {
 		// Once the language server is started this will be called, it's where we can register all of our
 		// bits with VSCode for them to function properly.
-		languageServerClient.onRequest('getAllDocuments', () => documentManager.getAllDocuments());
+		// languageServerClient.onRequest('getAllDocuments', () => documentManager.getAllDocuments());
 		localRegistrations.push(
 			documentManager.register()
 		);

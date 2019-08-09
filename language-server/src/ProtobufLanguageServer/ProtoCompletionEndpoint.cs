@@ -1,11 +1,13 @@
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using ProtobufLanguageServer.Completions;
 using ProtobufLanguageServer.Documents;
 
 namespace ProtobufLanguageServer
@@ -14,13 +16,19 @@ namespace ProtobufLanguageServer
     {
         private readonly ILanguageServer _router;
         private readonly ForegroundThreadManager _threadManager;
+        private readonly IEnumerable<ProtoCompletionItemProvider> _completionItemProviders;
         private readonly WorkspaceSnapshotManager _snapshotManager;
 
         private CompletionCapability _capability;
 
-        public ProtoCompletionEndpoint(ForegroundThreadManager threadManager, ILanguageServer router, WorkspaceSnapshotManager snapshotManager)
+        public ProtoCompletionEndpoint(
+            ForegroundThreadManager threadManager, 
+            IEnumerable<ProtoCompletionItemProvider> completionItemProviders,
+            ILanguageServer router, 
+            WorkspaceSnapshotManager snapshotManager)
         {
             _threadManager = threadManager;
+            _completionItemProviders = completionItemProviders;
             _router = router ?? throw new ArgumentNullException(nameof(router));
             _snapshotManager = snapshotManager;
         }
@@ -63,21 +71,16 @@ namespace ProtobufLanguageServer
                 _threadManager.ForegroundScheduler);
 
             var syntaxTree = await document.GetSyntaxTreeAsync();
-            // TODO: Do something useful with this syntax tree.
+            var completionItems = new List<CompletionItem>();
 
-            // Provide your completions here
-            var item1 = new CompletionItem()
+            foreach (var completionItemProvider in _completionItemProviders)
             {
-                Label = "Sample completion item 1",
-                InsertText = "SampleInsertText1"
-            };
-            var item2 = new CompletionItem()
-            {
-                Label = "Sample completion item 2",
-                InsertText = "SampleInsertText2"
-            };
-            var completionList = new CompletionList(item1, item2);
-            
+                var owner = syntaxTree.Root.GetNodeAt((int)request.Position.Line, (int)request.Position.Character);
+                var resolvedCompletions = completionItemProvider.GetCompletionItems(owner, request.Position, syntaxTree);
+                completionItems.AddRange(resolvedCompletions);
+            }
+
+            var completionList = new CompletionList(completionItems);
             return completionList;
         }
 

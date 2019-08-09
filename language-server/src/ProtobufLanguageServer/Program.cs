@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using ProtobufLanguageServer.Documents;
+using ProtobufLanguageServer.Completions;
 
 namespace ProtobufLanguageServer
 {
@@ -56,6 +57,10 @@ namespace ProtobufLanguageServer
                     {
                         services.AddSingleton<ForegroundThreadManager>(threadManager);
                         services.AddSingleton<WorkspaceSnapshotManager>(snapshotManager);
+                        services.AddSingleton<ProtoCompletionItemProvider, TopLevelKeywordCompletionItemProvider>();
+                        services.AddSingleton<ProtoCompletionItemProvider, EnumKeywordCompletionItemProvider>();
+                        services.AddSingleton<ProtoCompletionItemProvider, ServiceKeywordCompletionItemProvider>();
+                        services.AddSingleton<ProtoCompletionItemProvider, MessageKeywordCompletionItemProvider>();
                     }));
 
             await Task.Factory.StartNew(
