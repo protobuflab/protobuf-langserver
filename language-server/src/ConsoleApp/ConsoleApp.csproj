@@ -38,6 +38,7 @@
 
     <ItemGroup Condition="$(IsOSX)==true AND $(BuildNative)==false">
     <Content Include="../../../out/build/osx-x64/libminiprotoc.dylib" CopyToOutputDirectory="Always" />
+    <Content Include="../../../out/build/osx-x64/libprotobuf.dylib" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
