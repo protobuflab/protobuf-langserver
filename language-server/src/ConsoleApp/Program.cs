@@ -15,7 +15,7 @@ namespace ConsoleApp
 {
     public class Program
     {
-        [DllImport("libminiprotoc.dll")]
+        [DllImport("libminiprotoc")]
         public static extern bool generate(IntPtr file, Int64 fileSize, IntPtr descriptorProtoPtr, out Int64 descriptorSize);
         
         public static async Task Main()

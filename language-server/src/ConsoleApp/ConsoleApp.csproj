@@ -36,6 +36,10 @@
     <Content Include="../../../out/build/x64-$(Configuration)/libminiprotoc/libprotobufd.dll" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+    <ItemGroup Condition="$(IsOSX)==true AND $(BuildNative)==false">
+    <Content Include="../../../out/build/osx-x64/libminiprotoc.dylib" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.1.0" />
   </ItemGroup>
