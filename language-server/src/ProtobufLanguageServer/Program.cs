@@ -53,6 +53,7 @@ namespace ProtobufLanguageServer
                     .WithHandler<TextDocumentSynchronizationEndpoint>()
                     .WithHandler<ProtoCompletionEndpoint>()
                     .WithHandler<ProtoDefinitionEndpoint>()
+                    .WithHandler<RenameEndpoint>()
                     .WithServices(services =>
                     {
                         services.AddSingleton<ForegroundThreadManager>(threadManager);

@@ -32,6 +32,28 @@ namespace Protogen
             ResolveContent(text);
         }
 
+        public IReadOnlyList<TNode> GetDescendentNodes<TNode>() where TNode : Node
+        {
+            var descendentNodes = new List<TNode>();
+
+            AddDescendentNodes(this);
+
+            return descendentNodes;
+
+            void AddDescendentNodes(Node node)
+            {
+                if (node is TNode tnode)
+                {
+                    descendentNodes.Add(tnode);
+                }
+
+                for (var i = 0; i < node.Children.Count; i++)
+                {
+                    AddDescendentNodes(node.Children[i]);
+                }
+            }
+        }
+
         public Node GetNodeAt(int line, int col)
         {
             var target = Children
