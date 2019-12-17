@@ -6,7 +6,7 @@ This project vcpkg to build. Follow the instuctions at https://github.com/micros
 
 ## Building
 
-``
+```
 mkdir build
 cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\src\vcpkg\scripts\buildsystems\vcpkg.cmake -G "Visual Studio 16 2019"
